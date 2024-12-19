@@ -1,0 +1,28 @@
+{
+  "name": "html-tags",
+  "version": "1.0.0",
+  "description":  "List HTML tags and attributes added to browsers",
+  "main": "app.js",
+  "scripts": {
+    "create:data": "node src/data/createData.js",
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Nikolai Shabalin",
+    "email": "dev.nikolai.shabalin@gmail.com"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@astrojs/check": "0.9.4",
+    "@mdn/browser-compat-data": "5.6.25",
+    "astro": "5.0.3",
+    "typescript": "5.7.2"
+  },
+  "type": "module",
+  "engines": {
+    "node": "22"
+  }
+}
