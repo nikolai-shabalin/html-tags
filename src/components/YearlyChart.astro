@@ -1,9 +1,5 @@
 ---
 import { data } from '../data/data.js';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
 
 // Подготавливаем данные для графика
 const years = Object.keys(data).sort((a, b) => parseInt(b) - parseInt(a));
@@ -19,14 +15,11 @@ const maxCount = Math.max(...yearData.map(item => item.count));
 // Получаем начальный и конечный годы для подзаголовка
 const startYear = Math.min(...yearData.map(item => item.year));
 const endYear = Math.max(...yearData.map(item => item.year));
-
-// Создаем подзаголовок с подстановкой значений
-const subtitle = t('yearly.chart.subtitle').replace('{start}', startYear.toString()).replace('{end}', endYear.toString());
 ---
 
 <section class="yearly-chart">
-  <h2 class="chart-title">{t('yearly.chart.title')}</h2>
-  <p class="chart-subtitle">{subtitle}</p>
+  <h2 class="chart-title">Статистика по годам'</h2>
+  <p class="chart-subtitle">Эволюция CSS с {startYear} по {endYear} годы</p>
 
   <div class="chart-controls" role="group" aria-label="Сортировка">
     <button class="sort-button active" id="sortByYear" title="Сортировать по годам" aria-pressed="true" aria-label="Сортировать по годам">
@@ -65,15 +58,15 @@ const subtitle = t('yearly.chart.subtitle').replace('{start}', startYear.toStrin
 
   <div class="chart-stats">
     <div class="stat">
-      <span class="stat-label">{t('yearly.chart.totalYears')}</span>
+      <span class="stat-label">Всего лет:</span>
       <span class="stat-value">{years.length}</span>
     </div>
     <div class="stat">
-      <span class="stat-label">{t('yearly.chart.totalFeatures')}</span>
+      <span class="stat-label">Всего фич:</span>
       <span class="stat-value">{Object.values(data).flat().length}</span>
     </div>
     <div class="stat">
-      <span class="stat-label">{t('yearly.chart.mostActiveYear')}</span>
+      <span class="stat-label">Самый активный год:</span>
       <span class="stat-value">{yearData.reduce((max, item) => item.count > max.count ? item : max).year}</span>
     </div>
   </div>
