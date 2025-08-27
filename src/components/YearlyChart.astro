@@ -1,5 +1,9 @@
 ---
 import { data } from '../data/data.js';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 // Подготавливаем данные для графика
 const years = Object.keys(data).sort((a, b) => parseInt(b) - parseInt(a));
@@ -11,44 +15,66 @@ const yearData = years.map(year => ({
 
 // Находим максимальное количество для масштабирования
 const maxCount = Math.max(...yearData.map(item => item.count));
+
+// Получаем начальный и конечный годы для подзаголовка
+const startYear = Math.min(...yearData.map(item => item.year));
+const endYear = Math.max(...yearData.map(item => item.year));
+
+// Создаем подзаголовок с подстановкой значений
+const subtitle = t('yearly.chart.subtitle').replace('{start}', startYear.toString()).replace('{end}', endYear.toString());
 ---
 
 <section class="yearly-chart">
-  <div class="chart-header">
-    <h2 class="chart-title">HTML-фичи по годам</h2>
-    <p class="chart-subtitle">Эволюция HTML с {years[0]} по {years[years.length - 1]} годы</p>
+  <h2 class="chart-title">{t('yearly.chart.title')}</h2>
+  <p class="chart-subtitle">{subtitle}</p>
+
+  <div class="chart-controls" role="group" aria-label="Сортировка">
+    <button class="sort-button active" id="sortByYear" title="Сортировать по годам" aria-pressed="true" aria-label="Сортировать по годам">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="8" width="3" height="10" rx="1" fill="currentColor"></rect>
+        <rect x="8.5" y="4" width="3" height="14" rx="1" fill="currentColor"></rect>
+        <rect x="14" y="12" width="3" height="6" rx="1" fill="currentColor"></rect>
+        <rect x="19.5" y="6" width="3" height="12" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+    <button class="sort-button" id="sortByCount" title="Сортировать по количеству" aria-pressed="false" aria-label="Сортировать по количеству">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="4" width="3" height="14" rx="1" fill="currentColor"></rect>
+        <rect x="8.5" y="7" width="3" height="11" rx="1" fill="currentColor"></rect>
+        <rect x="14" y="10" width="3" height="8" rx="1" fill="currentColor"></rect>
+        <rect x="19.5" y="13" width="3" height="5" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
   </div>
 
-  <div class="chart-container">
-    <div class="chart-content">
-      <div class="chart-bars">
-        {yearData.map((item, index) => (
-          <a href={`#year-${item.year}`} class="bar-container" data-year={item.year} data-count={item.count} style={`--bar-height: ${(item.count / maxCount) * 100}%; --delay: ${index * 0.05}s`}>
-            <div class="bar">
-              <div class="bar-fill"></div>
-            </div>
-            <div class="bar-label">
-              <span class="year">{item.year}</span>
-              <span class="count">{item.count}</span>
-            </div>
-          </a>
-        ))}
-      </div>
+  <div class="chart-content">
+    <div class="chart-bars">
+      {yearData.map((item, index) => (
+        <a href={`#year-${item.year}`} class="bar-container" data-year={item.year} data-count={item.count} style={`--bar-height: ${(item.count / maxCount) * 100}%; --delay: ${index * 0.05}s`}>
+          <div class="bar">
+            <div class="bar-fill" data-count={item.count}></div>
+          </div>
+          <div class="bar-label">
+            <span class="year">{item.year}</span>
+            <span class="count">{item.count}</span>
+          </div>
+        </a>
+      ))}
     </div>
+  </div>
 
-    <div class="chart-stats">
-      <div class="stat">
-        <span class="stat-label">Всего лет:</span>
-        <span class="stat-value">{years.length}</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Всего фич:</span>
-        <span class="stat-value">{Object.values(data).flat().length}</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Самый активный год:</span>
-        <span class="stat-value">{yearData.reduce((max, item) => item.count > max.count ? item : max).year}</span>
-      </div>
+  <div class="chart-stats">
+    <div class="stat">
+      <span class="stat-label">{t('yearly.chart.totalYears')}</span>
+      <span class="stat-value">{years.length}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">{t('yearly.chart.totalFeatures')}</span>
+      <span class="stat-value">{Object.values(data).flat().length}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">{t('yearly.chart.mostActiveYear')}</span>
+      <span class="stat-value">{yearData.reduce((max, item) => item.count > max.count ? item : max).year}</span>
     </div>
   </div>
 </section>
@@ -66,12 +92,8 @@ const maxCount = Math.max(...yearData.map(item => item.count));
     overflow: visible;
   }
 
-  .chart-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
   .chart-title {
+    text-align: center;
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 0.5rem;
@@ -82,14 +104,10 @@ const maxCount = Math.max(...yearData.map(item => item.count));
 
   .chart-subtitle {
     font-size: 1rem;
+    text-align: center;
     color: var(--color-text-light);
     margin: 0;
-  }
-
-  .chart-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    margin-bottom: 3rem;
   }
 
   .chart-content {
@@ -100,6 +118,41 @@ const maxCount = Math.max(...yearData.map(item => item.count));
     padding: 3rem 2rem 2rem;
     border: 1px solid rgb(148 163 184 / 10%);
     overflow: visible;
+    margin-bottom: 2rem;
+  }
+
+  .chart-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+  }
+
+  .sort-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(148 163 184 / 30%);
+    background: rgb(255 255 255 / 40%);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  }
+
+  .sort-button:hover {
+    background: rgb(255 255 255 / 60%);
+  }
+
+  .sort-button.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgb(79 70 229 / 20%);
+  }
+
+  .sort-button svg {
+    width: 20px;
+    height: 20px;
   }
 
   .chart-bars {
@@ -255,35 +308,57 @@ const maxCount = Math.max(...yearData.map(item => item.count));
     .chart-stats {
       border: 1px solid rgb(71 85 105 / 20%);
     }
-  }
 
-  /* Адаптивность */
+    .sort-button {
+      background: rgb(15 23 42 / 40%);
+      border: 1px solid rgb(71 85 105 / 40%);
+    }
+
+    .sort-button:hover {
+      background: rgb(15 23 42 / 60%);
+    }
+  }
 </style>
 
-<script>
-  // Добавляем интерактивность к графику
+<script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
-    const bars = document.querySelectorAll('.bar-container');
+    const barsContainer = document.querySelector('.chart-bars');
+    if (!barsContainer) return;
 
-    bars.forEach(bar => {
-      if (!(bar instanceof HTMLElement)) return;
+    const sortByYearBtn = document.getElementById('sortByYear');
+    const sortByCountBtn = document.getElementById('sortByCount');
 
-      const year = bar.dataset.year;
-      const count = bar.dataset.count;
+    const nodes = Array.from(barsContainer.children);
+    const sortByYearNodes = [...nodes].sort((a, b) => parseInt(b.getAttribute('data-year')) - parseInt(a.getAttribute('data-year')));
+    const sortByCountNodes = [...nodes].sort((a, b) => {
+      const diff = parseInt(b.getAttribute('data-count')) - parseInt(a.getAttribute('data-count'));
+      return diff !== 0 ? diff : (parseInt(b.getAttribute('data-year')) - parseInt(a.getAttribute('data-year')));
+    });
 
-      // Показываем количество при наведении
-      bar.addEventListener('mouseenter', () => {
-        const fill = bar.querySelector('.bar-fill');
-        if (fill && count) {
-          fill.setAttribute('data-count', count);
-        }
+    function applyOrder(ordered) {
+      ordered.forEach((node, idx) => {
+        node.style.setProperty('--delay', `${idx * 0.05}s`);
+        barsContainer.appendChild(node);
       });
+    }
 
-      // Добавляем клик для будущей функциональности (переход к году)
-      bar.addEventListener('click', () => {
-        // Здесь можно добавить логику для перехода к определенному году
-        console.log(`Clicked on year ${year} with ${count} features`);
+    function setActive(activeBtn) {
+      [sortByYearBtn, sortByCountBtn].forEach(btn => {
+        if (!btn) return;
+        const isActive = btn === activeBtn;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
       });
+    }
+
+    sortByYearBtn?.addEventListener('click', () => {
+      applyOrder(sortByYearNodes);
+      setActive(sortByYearBtn);
+    });
+
+    sortByCountBtn?.addEventListener('click', () => {
+      applyOrder(sortByCountNodes);
+      setActive(sortByCountBtn);
     });
   });
 </script>
