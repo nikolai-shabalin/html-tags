@@ -6,7 +6,8 @@
   "scripts": {
     "create:data": "node src/data/createData.js",
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
+    "lint": "oxlint --ignore-pattern '.astro/**'",
     "preview": "astro preview"
   },
   "keywords": [],
@@ -16,10 +17,11 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@astrojs/check": "0.9.9",
     "@mdn/browser-compat-data": "8.0.13",
-    "astro": "7.0.7",
-    "typescript": "5.9.3"
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "astro": "7.2.9",
+    "oxlint": "^1.80.0",
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "type": "module",
   "engines": {
