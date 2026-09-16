@@ -17,10 +17,10 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@mdn/browser-compat-data": "8.0.13",
+    "@mdn/browser-compat-data": "8.1.1",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "astro": "7.2.9",
-    "oxlint": "^1.80.0",
+    "astro": "7.3.2",
+    "oxlint": "^1.83.0",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "type": "module",
