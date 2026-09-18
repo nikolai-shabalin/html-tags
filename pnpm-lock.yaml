@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@mdn/browser-compat-data':
-        specifier: 8.1.1
-        version: 8.1.1
+        specifier: 8.1.2
+        version: 8.1.2
       '@typescript/native':
         specifier: npm:typescript@^7.0.2
         version: typescript@7.0.2
@@ -522,8 +522,8 @@ packages:
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
 
-  '@mdn/browser-compat-data@8.1.1':
-    resolution: {integrity: sha512-RARbe5H5WrOTJAUGzUP8FfYFqOwpthrMVU8Ma/MC8mi+twRw9LU2ndk6axbxAK1TNYNWM2JM2FwRQgHJWNVMBg==}
+  '@mdn/browser-compat-data@8.1.2':
+    resolution: {integrity: sha512-pe2qO3VDkRybAvmpr1UfC4zMnvOiVHUp4EMJU8RboulqzEvearRrUWCi/Y0QVRvkfe6Fh5Nahdk9uncU9anrFw==}
 
   '@napi-rs/wasm-runtime@1.2.4':
     resolution: {integrity: sha512-AJxoUD2/15ESHbvpcyjU274nsAPLuOtPHCk0vKJM5pj//Fg/B1FXNWjPnXTT9PymCYYiHo4zPj0ZomXBKhoy7g==}
@@ -2020,7 +2020,7 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
 
-  '@mdn/browser-compat-data@8.1.1': {}
+  '@mdn/browser-compat-data@8.1.2': {}
 
   '@napi-rs/wasm-runtime@1.2.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
